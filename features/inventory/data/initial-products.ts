@@ -1,4 +1,6 @@
-export const initialProducts = [
+import type { Product } from "@/shared/types/shop";
+
+export const initialProducts: Product[] = [
   {
     id: 1,
     name: "Lucky Me! Pancit Canton (Chili Mansi)",
@@ -48,4 +50,4 @@ export const categories = [
   "Coffee/Sugar",
   "Snacks",
   "Condiments",
-];
+] as const;

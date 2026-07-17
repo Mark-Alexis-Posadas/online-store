@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
-import { categories } from "../utils/initialProducts";
+import { categories } from "@/features/inventory/data/initial-products";
+import type { ProductFormData, ProductModalProps } from "@/features/type";
+import type { ProductCategory } from "@/shared/types/shop";
 
 export default function ProductModal({
   isOpen,
   onClose,
   onSave,
   editingProduct,
-}) {
-  const [formData, setFormData] = useState({
+}: ProductModalProps) {
+  const [formData, setFormData] = useState<ProductFormData>({
     name: "",
     price: "",
     category: "Snacks",
@@ -32,10 +34,18 @@ export default function ProductModal({
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSave(formData);
+    onSave({
+      ...formData,
+      price: Number(formData.price),
+      stock: Number(formData.stock),
+    });
   };
+
+  const categoryOptions = categories.filter(
+    (cat): cat is ProductCategory => cat !== "All",
+  );
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
@@ -101,18 +111,17 @@ export default function ProductModal({
               <label className="block font-medium mb-1">Category</label>
               <select
                 value={formData.category}
-                onChange={(e) =>
-                  setFormData({ ...formData, category: e.target.value })
-                }
+                onChange={(e) => {
+                  const nextCategory = e.target.value as ProductCategory;
+                  setFormData({ ...formData, category: nextCategory });
+                }}
                 className="w-full p-2 border rounded-xl dark:bg-gray-900 dark:border-gray-700"
               >
-                {categories
-                  .filter((c) => c !== "All")
-                  .map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
-                  ))}
+                {categoryOptions.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
               </select>
             </div>
             <div>

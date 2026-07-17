@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Search, ShoppingBag, ShoppingCart, Check } from "lucide-react";
 import { categories } from "@/features/inventory/data/initial-products";
+import type { ShopViewProps } from "@/features/type";
 
 export default function ShopView({
   products,
@@ -8,9 +9,10 @@ export default function ShopView({
   addToCart,
   updateCartQuantity,
   handleCheckout,
-}) {
+}: ShopViewProps) {
   const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedCategory, setSelectedCategory] =
+    useState<(typeof categories)[number]>("All");
 
   const filteredProducts = products.filter((p) => {
     const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase());

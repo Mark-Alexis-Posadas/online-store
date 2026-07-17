@@ -1,8 +1,15 @@
+export type ProductCategory =
+  | "Noodles"
+  | "Beverages"
+  | "Coffee/Sugar"
+  | "Snacks"
+  | "Condiments";
+
 export interface Product {
   id: number;
   name: string;
   price: number;
-  category: string;
+  category: ProductCategory;
   stock: number;
   image: string;
 }

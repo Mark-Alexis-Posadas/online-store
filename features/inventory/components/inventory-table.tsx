@@ -1,11 +1,12 @@
 import { Package, Plus, Edit2, Trash2 } from "lucide-react";
+import type { InventoryTableProps } from "@/features/type";
 
-export default function InventorTable({
+export default function InventoryTable({
   products,
   onAddClick,
   onEditClick,
   onDeleteClick,
-}) {
+}: InventoryTableProps) {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 transition-colors">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">

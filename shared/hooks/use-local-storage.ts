@@ -1,25 +1,34 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 
-export function useLocalStorage(key, initialValue) {
-  const [value, setValue] = useState(() => {
-    const saved = localStorage.getItem(key);
+export function useLocalStorage<T>(
+  key: string,
+  initialValue: T | (() => T),
+): [T, Dispatch<SetStateAction<T>>] {
+  const [value, setValue] = useState<T>(() => {
+    if (typeof window === "undefined") {
+      return initialValue instanceof Function ? initialValue() : initialValue;
+    }
+
+    const saved = window.localStorage.getItem(key);
     if (saved !== null) {
-      // Handle boolean strings for theme toggling
-      if (saved === "true") return true;
-      if (saved === "false") return false;
       try {
-        return JSON.parse(saved);
+        return JSON.parse(saved) as T;
       } catch {
-        return saved;
+        return saved as T;
       }
     }
-    return initialValue;
+
+    return initialValue instanceof Function ? initialValue() : initialValue;
   });
 
   useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
     const valueToStore =
-      typeof value === "object" ? JSON.stringify(value) : value;
-    localStorage.setItem(key, valueToStore);
+      typeof value === "object" ? JSON.stringify(value) : String(value);
+    window.localStorage.setItem(key, valueToStore);
   }, [key, value]);
 
   return [value, setValue];
